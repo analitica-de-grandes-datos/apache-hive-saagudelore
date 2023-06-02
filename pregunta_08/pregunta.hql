@@ -47,3 +47,26 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+DROP TABLE IF EXISTS tbl0;
+CREATE TABLE tbl0 (
+    c1 INT,
+    c2 STRING,
+    c3 INT,
+    c4 DATE,
+    c5 ARRAY<CHAR(1)>, 
+    c6 MAP<STRING, INT>
+)
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY ':'
+MAP KEYS TERMINATED BY '#'
+LINES TERMINATED BY '\n';
+
+LOAD DATA LOCAL INPATH 'data0.csv' INTO TABLE tbl0;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+
+SELECT table_2.c2, CAST(sum(table_2.suma)as string) 
+FROM (SELECT c2, COALESCE (tbl0.c6["aa"], CAST(0 AS BIGINT))+ COALESCE (tbl0.c6["bb"], CAST(0 AS BIGINT)) + COALESCE (tbl0.c6["cc"], CAST(0 AS BIGINT)) + COALESCE (tbl0.c6["dd"], CAST(0 AS BIGINT)) as suma FROM tbl0) table_2
+GROUP BY table_2.c2;
