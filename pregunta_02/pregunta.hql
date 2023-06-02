@@ -26,7 +26,7 @@ LOAD DATA LOCAL INPATH "data.tsv" OVERWRITE INTO TABLE data;
 CREATE TABLE info AS 
         SELECT *
         FROM data 
-        ORDER BY letra, num; 
+        ORDER BY letra, num, fecha; 
 
 INSERT OVERWRITE LOCAL DIRECTORY './output' 
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
