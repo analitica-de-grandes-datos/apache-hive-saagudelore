@@ -33,3 +33,9 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+
+SELECT letra, letras, count(letras) AS count 
+FROM t0 LATERAL VIEW explode(c2) t0 AS letra LATERAL VIEW explode(c3) t0 AS letras, nums 
+GROUP BY letra, letras;
